@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recognition Project - Celebrating Talent</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@700&family=Figtree:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Configuração Base e Temas (Dark/Light) --- */
+        :root {
+            /* Cores Light Mode (Default) */
+            --bg-color: #ffffff;
+            --text-color: #24282A;
+            --header-color: #231372;
+            --highlight-color: #20E2C8;
+            --accent-color: #6106AF;
+            --card-bg: #f9f9f9;
+            --border-color: #eee;
+            --total-row-bg: rgba(35, 19, 114, 0.08); /* 10% de #231372 */
+            --shadow-color: rgba(0, 0, 0, 0.07);
+        }
+
+        body.dark-mode {
+            /* Cores Dark Mode */
+            --bg-color: #1c1e26;
+            --text-color: #c9c9c9;
+            --header-color: #a9b4ff; /* Azul claro para contraste */
+            --card-bg: #2a2d38;
+            --border-color: #444;
+            --total-row-bg: rgba(169, 180, 255, 0.1); /* 10% de #a9b4ff */
+            --shadow-color: rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth; /* Scroll suave ao clicar nos links da nav */
+        }
+
+        body {
+            font-family: 'Figtree', sans-serif;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* --- Header (Cabeçalho) e Navegação --- */
+        header {
+            background-color: var(--bg-color);
+            padding: 1em 1.5em;
+            display: flex;
+            justify-content: space-between; /* Alinha logo à esquerda, nav/controles à direita */
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            
+            /* Efeito "Sticky" */
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .logo-container svg {
+            height: 50px; /* Reduzido para um header sticky */
+            width: auto;
+            display: block;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1.5em;
+        }
+
+        nav {
+            display: flex;
+            gap: 1.5em;
+        }
+
+        nav a {
+            font-family: 'Barlow', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            position: relative;
+            padding-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--header-color);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--highlight-color);
+            transform: scaleX(0); /* Começa invisível */
+            transform-origin: bottom left;
+            transition: transform 0.3s ease-out;
+        }
+
+        nav a:hover::after {
+            transform: scaleX(1); /* Expande no hover */
+        }
+
+        /* Botão Dark Mode */
+        #darkModeToggle {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.3rem; /* Tamanho dos emojis */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        #darkModeToggle:hover {
+            background-color: var(--card-bg);
+        }
+        
+        #darkModeToggle .moon {
+            display: none; /* Começa escondido */
+        }
+
+        body.dark-mode #darkModeToggle .sun {
+            display: none;
+        }
+        
+        body.dark-mode #darkModeToggle .moon {
+            display: block;
+        }
+        
+        /* --- Adaptação do Logo SVG --- */
+        /* Esta regra muda o fill da class .cls-4 (o texto do logo) para a cor do tema */
+        .cls-4 {
+            fill: var(--text-color) !important;
+            transition: fill 0.3s ease;
+        }
+
+        /* --- Estrutura Principal --- */
+        main {
+            max-width: 1100px;
+            margin: 2em auto;
+            padding: 1em;
+        }
+
+        section {
+            margin-bottom: 3.5em;
+            padding-top: 1.5em; /* Espaço para a navegação sticky */
+        }
+
+        /* --- Tipografia (Headers e Texto) --- */
+        h1, h2, h3, h4 {
+            font-family: 'Barlow', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--header-color);
+            margin-bottom: 0.5em;
+            transition: color 0.3s ease;
+        }
+
+        #title-section {
+            text-align: center;
+            margin-bottom: 3em;
+            padding-top: 0; /* Título não precisa de padding extra */
+        }
+        #title-section h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.1em;
+        }
+        #title-section .subtitle {
+            font-family: 'Figtree', sans-serif;
+            font-size: 1.5rem;
+            color: var(--text-color);
+            font-weight: 400;
+        }
+
+        .highlight-bar {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 8px;
+            font-size: 1.8rem;
+        }
+
+        .highlight-bar::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 6px;
+            background-color: var(--highlight-color);
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            margin-top: 1.5em;
+        }
+        
+        h4 {
+             font-size: 1.1rem;
+             color: var(--text-color);
+        }
+
+        p {
+            margin-bottom: 1em;
+        }
+
+        ul {
+            list-style-position: inside;
+            padding-left: 0.5em;
+            margin-bottom: 1.5em;
+        }
+
+        li {
+            margin-bottom: 0.5em;
+        }
+        
+        /* --- Tabelas (Best Practices, Budget) --- */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 1.5em;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            transition: border-color 0.3s ease;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1em;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+        }
+
+        th {
+            font-family: 'Barlow', sans-serif;
+            text-transform: uppercase;
+            background-color: var(--header-color);
+            color: #fff; /* Branco sobre azul escuro funciona nos 2 modos */
+        }
+
+        td strong {
+            color: var(--header-color);
+        }
+        
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tbody tr:nth-child(even) {
+            background-color: var(--card-bg);
+        }
+
+        /* Linha de Total no Orçamento */
+        .total-row td {
+            font-weight: 700;
+            font-size: 1.1rem;
+            background-color: var(--total-row-bg);
+            color: var(--header-color);
+        }
+        
+        .observations {
+            margin-top: 1em;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        /* --- Grelha de Cartões (Project Details) --- */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5em;
+            margin-top: 1.5em;
+        }
+        
+        /* --- Animações e Efeitos "Cooler" --- */
+        @keyframes slideUpFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .project-card, .timeline-item {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5em;
+            background-color: var(--bg-color); /* Usar bg-color para "flutuar" sobre o card-bg em dark mode */
+            box-shadow: 0 4px 10px var(--shadow-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+            
+            /* Animação */
+            opacity: 0; /* Começa invisível */
+            animation: slideUpFadeIn 0.6s ease-out forwards;
+        }
+        
+        /* Stagger (atraso) na animação dos cartões */
+        .project-card:nth-child(1) { animation-delay: 0.1s; }
+        .project-card:nth-child(2) { animation-delay: 0.2s; }
+        .project-card:nth-child(3) { animation-delay: 0.3s; }
+        .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+        .timeline-item:nth-child(2) { animation-delay: 0.2s; }
+        .timeline-item:nth-child(3) { animation-delay: 0.3s; }
+
+
+        .project-card:hover, .timeline-item:hover {
+            transform: translateY(-5px); /* Efeito "flutuar" */
+            box-shadow: 0 8px 20px var(--shadow-color);
+        }
+        
+        .project-card h3 {
+             margin-top: 0;
+             color: var(--accent-color);
+        }
+        
+        .project-card p strong {
+            color: var(--text-color);
+            font-family: 'Barlow', sans-serif;
+            font-weight: 700;
+        }
+        
+        .mascot-info {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5em;
+            margin-top: 2em;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        
+        /* --- Timeline (Linha do Tempo) --- */
+        .timeline-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5em;
+            margin-top: 1.5em;
+        }
+        
+        .timeline-item {
+            flex: 1;
+            min-width: 250px;
+            background-color: var(--card-bg); /* Diferente do project-card */
+            border-left: 5px solid var(--highlight-color);
+            border-radius: 0 8px 8px 0;
+            box-shadow: none; /* Sombra diferente para timeline */
+        }
+        
+        .timeline-item:hover {
+             box-shadow: 0 8px 20px var(--shadow-color);
+        }
+        
+        .timeline-item strong {
+            font-family: 'Barlow', sans-serif;
+            text-transform: uppercase;
+            color: var(--header-color);
+            font-size: 1.2rem;
+            display: block;
+            margin-bottom: 0.5em;
+        }
+        
+        /* --- Botão (Call to Action) --- */
+        #approval-section {
+            text-align: center;
+            background-color: var(--card-bg);
+            padding: 2.5em;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--highlight-color);
+            color: #231372; /* Cor de header escura original, para contraste com cyan */
+            font-family: 'Barlow', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 0.8em 1.5em;
+            border-radius: 5px;
+            margin-top: 1em;
+            font-size: 1.1rem;
+            border: none;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #1bcbaa; /* Variação de shader */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* --- Media Query para Mobile --- */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1em;
+            }
+            .header-controls {
+                flex-direction: column-reverse; /* Coloca o toggle em baixo da nav */
+                width: 100%;
+            }
+            nav {
+                width: 100%;
+                justify-content: space-around;
+            }
+            nav a {
+                font-size: 0.8rem;
+            }
+            #darkModeToggle {
+                position: absolute; /* Coloca o toggle no canto */
+                top: 1em;
+                right: 1.5em;
+            }
+            .logo-container {
+                margin-right: auto; /* Alinha logo à esquerda */
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <svg id="Camada_2" data-name="Camada 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 837.7 245.66">
+                <defs>
+                    <style>
+                    /* O .cls-4 é definido no CSS principal para permitir a troca de tema */
+                    .cls-1 { fill: none; }
+                    .cls-2 { clip-path: url(#clippath-1); }
+                    .cls-3 { fill: url(#Gradiente_sem_nome_10); }
+                    /* .cls-4 { fill: var(--text-color); } <- Definido no CSS global */
+                    .cls-5 { clip-path: url(#clippath); }
+                    </style>
+                    <clipPath id="clippath"><rect class="cls-1" x="546.28" y="39.03" width="110.43" height="113"/></clipPath>
+                    <clipPath id="clippath-1"><rect class="cls-1" width="240.06" height="245.66"/></clipPath>
+                    <linearGradient id="Gradiente_sem_nome_10" data-name="Gradiente sem nome 10" x1="5622.93" y1="5321.6" x2="5624.11" y2="5322.12" gradientTransform="translate(-1349792.92 1307463.94) scale(240.05 -245.66)" gradientUnits="userSpaceOnUse">
+                        <stop offset="0" stop-color="#1b1f59"/><stop offset="1" stop-color="#0fc"/>
+                    </linearGradient>
+                </defs>
+                <g id="Camada_1" data-name="Camada 1"><g id="Grupo_149" data-name="Grupo 149"><g id="Grupo_42-2" data-name="Grupo 42-2">
+                    <path id="Caminho_389-2" data-name="Caminho 389-2" class="cls-4" d="M452.05,129.69v18.74c0,1.99-1.61,3.6-3.6,3.6h-67.98c-1.99,0-3.6-1.61-3.6-3.6h0V42.63c0-1.99,1.61-3.6,3.6-3.6h20.9c1.99,0,3.6,1.61,3.6,3.6h0v83.46h43.47c1.99,0,3.6,1.61,3.61,3.59h0Z"/>
+                    <path id="Caminho_392-2" data-name="Caminho 392-2" class="cls-4" d="M821.22,116.37l-2.89-5.46c17.91-12.4,22.38-36.97,9.99-54.88-7.37-10.65-19.49-17-32.44-17h-41.65c-1.99,0-3.6,1.61-3.6,3.6v105.8c0,1.99,1.61,3.6,3.6,3.6h20.81c2.04,0,3.7-1.66,3.7-3.7v-30.56c0-.77.63-1.4,1.4-1.4h8.8c.52,0,1,.29,1.24.75l.23.43,17.21,32.51c.64,1.22,1.91,1.98,3.29,1.98h23.18c2,0,3.62-1.63,3.62-3.63,0-.59-.15-1.17-.42-1.69l-16.06-30.34ZM805.1,85.93c-2.59,4.22-7.18,6.79-12.13,6.78h-14.24v-28.46h14.9v.02c7.86.37,13.93,7.03,13.56,14.89-.11,2.4-.83,4.73-2.09,6.78h0Z"/>
+                    <path id="Caminho_390-2" data-name="Caminho 390-2" class="cls-4" d="M370.4,140.66c.53.99.24,2.22-.67,2.87-26.46,18.91-63.23,12.79-82.14-13.66-18.91-26.46-12.79-63.23,13.66-82.14,20.48-14.64,47.99-14.64,68.47,0,.91.66,1.19,1.88.67,2.88l-10.45,19.73c-.93,1.76-3.11,2.42-4.87,1.49-.2-.1-.38-.23-.55-.36-13.36-10.51-32.71-8.21-43.22,5.15-10.51,13.36-8.21,32.71,5.15,43.22,11.17,8.79,26.91,8.79,38.08,0,1.55-1.24,3.82-.99,5.06.57.14.17.26.36.37.56l10.44,19.73Z"/>
+                    <path id="Caminho_388-2" data-name="Caminho 388-2" class="cls-4" d="M487.03,64.97v18.73h37.96c1.99,0,3.6,1.61,3.6,3.6v16.46c0,1.99-1.61,3.6-3.6,3.6h-37.96v18.73h49.15c1.99,0,3.6,1.61,3.6,3.6v18.74c0,1.99-1.61,3.6-3.6,3.6h-73.66c-1.99,0-3.6-1.61-3.6-3.6V42.63c0-1.99,1.61-3.6,3.6-3.6h73.66c1.99,0,3.6,1.61,3.6,3.6v18.65c0,2.04-1.65,3.69-3.69,3.69h-49.06Z"/>
+                    <path id="Caminho_391-2" data-name="Caminho 391-2" class="cls-4" d="M691.37,64.97v18.73h37.96c1.99,0,3.6,1.61,3.6,3.6v16.46c0,1.99-1.61,3.6-3.6,3.6h-37.96v18.73h49.15c1.99,0,3.6,1.61,3.6,3.6v18.74c0,1.99-1.61,3.6-3.6,3.6h-73.66c-1.99,0-3.6-1.61-3.6-3.6V42.63c0-1.99,1.61-3.6,3.6-3.6h73.66c1.99,0,3.6,1.61,3.6,3.6v18.65c0,2.04-1.65,3.69-3.69,3.69h-49.06Z"/>
+                    <g id="Grupo_29-2" data-name="Grupo 29-2"><g class="cls-5"><g id="Grupo_4-3" data-name="Grupo 4-3">
+                    <path id="Caminho_204-3" data-name="Caminho 204-3" class="cls-4" d="M656.55,42.1l-42.22,107.61c-.55,1.4-1.9,2.32-3.41,2.32h-18.86c-1.51,0-2.86-.92-3.41-2.32l-42.22-107.61c-.45-1.15.11-2.46,1.27-2.91.26-.1.54-.16.82-.16h24.31c1.54,0,2.92.96,3.45,2.41l25.21,69.57,15.99-44.09c.27-.74-.12-1.55-.85-1.82-.15-.06-.32-.08-.48-.08h-15.82c-1.24,0-2.25-1-2.25-2.25,0-.26.05-.52.13-.77l7.45-20.56c.53-1.45,1.9-2.41,3.44-2.41h45.35c1.24,0,2.25,1.01,2.25,2.25,0,.28-.05.56-.16.82"/>
+                    </g></g></g></g><g id="Grupo_43-2" data-name="Grupo 43-2">
+                    <path id="Caminho_393-2" data-name="Caminho 393-2" class="cls-4" d="M310.46,207.36c0,.24-.09.46-.27.62-.22.17-.5.26-.77.24h-6.76c-.33,0-.66-.11-.92-.32-.28-.21-.49-.5-.61-.82l-1.57-4.57h-12.07l-1.55,4.55c-.09.33-.29.62-.57.82-.28.21-.62.33-.98.32h-6.74c-.28.02-.55-.06-.77-.23-.18-.16-.29-.39-.27-.63,0-.19.05-.37.12-.55l12.72-32.27c.14-.34.38-.64.68-.86.27-.2.6-.31.94-.31h5.02c.34,0,.67.12.94.32.29.21.51.51.63.85l12.69,32.29c.07.17.11.36.12.55M297.1,195.31l-3.6-10.55-3.6,10.55h7.2Z"/>
+                    <path id="Caminho_394-2" data-name="Caminho 394-2" class="cls-4" d="M338.14,174.64c0-.34.13-.66.37-.89.23-.24.56-.38.89-.37h10.81c3.16-.05,6.28.71,9.06,2.23,2.61,1.44,4.77,3.58,6.23,6.19,1.52,2.76,2.29,5.86,2.24,9.01.05,3.14-.72,6.23-2.24,8.98-1.46,2.6-3.61,4.74-6.23,6.17-2.78,1.51-5.9,2.27-9.06,2.21h-10.81c-.7,0-1.26-.56-1.26-1.26h0v-32.27ZM350.21,199.97c3.23.04,6.21-1.71,7.74-4.55.77-1.42,1.16-3.01,1.14-4.62.02-1.66-.37-3.3-1.14-4.76-1.5-2.87-4.5-4.65-7.74-4.59l-3.43.02v18.5h3.43Z"/>
+                    <path id="Caminho_395-2" data-name="Caminho 395-2" class="cls-4" d="M425.13,173.56c.18.15.28.38.26.62,0,.2-.04.39-.12.57l-12.72,32.27c-.13.35-.36.65-.65.87-.27.21-.6.32-.94.32h-5.02c-.35,0-.68-.12-.95-.33-.29-.21-.52-.5-.64-.83l-12.67-32.29c-.07-.17-.11-.36-.12-.55,0-.23.09-.46.26-.61.22-.16.49-.25.76-.23h6.76c.34,0,.67.11.94.32.28.21.48.51.58.85l7.55,21,7.67-21.05c.1-.34.31-.63.6-.83.27-.2.59-.31.93-.31h6.76c.27-.02.54.06.76.21"/>
+                    <path id="Caminho_396-2" data-name="Caminho 396-2" class="cls-4" d="M452.9,174.64c-.02-.34.1-.68.33-.93.25-.23.59-.35.93-.33h22.4c.34-.02.68.1.93.33.23.25.35.59.33.93v5.48c.02.34-.1.67-.32.93-.25.24-.59.36-.94.33h-15.12v5.76h11.48c.37-.02.73.1,1.01.35.26.25.39.61.37.97v4.53c.02.35-.12.69-.37.93-.28.24-.64.36-1.01.33h-11.48v5.93h15.12c.47-.03.92.13,1.27.44.32.31.49.74.46,1.18v5.14c.02.34-.11.66-.35.9-.26.23-.6.35-.94.33h-22.85c-.34.02-.67-.09-.93-.32-.23-.25-.36-.58-.33-.92v-32.29Z"/>
+                    <path id="Caminho_397-2" data-name="Caminho 397-2" class="cls-4" d="M534.29,207.26c0,.51-.4.92-.9.93-.02,0-.03,0-.05,0h-7.12c-.29.02-.58-.06-.82-.23-.27-.24-.48-.52-.63-.85l-5.1-9.81h-3.55v9.62c.02.34-.11.68-.35.93-.26.23-.61.35-.96.33h-6.1c-.34.02-.67-.1-.92-.33-.23-.25-.34-.59-.32-.93v-32.29c-.01-.34.11-.66.35-.9.23-.24.56-.37.89-.36h12.22c2.26-.04,4.49.47,6.5,1.49,1.85.95,3.38,2.42,4.42,4.23,1.09,1.94,1.64,4.14,1.59,6.36.03,2.04-.46,4.06-1.42,5.86-.92,1.71-2.29,3.13-3.96,4.12l6.1,11.31c.1.16.14.34.14.52M516.12,189.85h4.45c.77.01,1.52-.2,2.18-.6.64-.39,1.16-.95,1.51-1.62.37-.69.56-1.46.55-2.24.01-.76-.18-1.51-.55-2.18-.35-.63-.88-1.15-1.51-1.5-.67-.36-1.42-.55-2.18-.53h-4.45v8.67Z"/>
+                    <path id="Caminho_398-2" data-name="Caminho 398-2" class="cls-4" d="M561.13,174.64c-.02-.34.1-.68.33-.93.25-.23.59-.35.93-.33h23.24c.34-.02.68.1.93.33.23.25.35.59.33.93v5.74c.02.35-.1.68-.33.94-.25.24-.58.37-.93.35h-7.31v25.55c.02.35-.1.69-.33.94-.26.23-.6.35-.95.32h-6.1c-.64.06-1.2-.4-1.26-1.04,0-.07,0-.15,0-.22v-25.55h-7.29c-.34.02-.68-.1-.93-.35-.23-.26-.35-.6-.33-.94v-5.74Z"/>
+                    <path id="Caminho_399-2" data-name="Caminho 399-2" class="cls-4" d="M623.9,207.24c.07.44-.23.86-.68.93-.07.01-.15.01-.22,0h-6.79c-.46.06-.87-.27-.93-.73,0-.07,0-.14,0-.2v-32.94c-.06-.44.26-.85.7-.9.07,0,.15,0,.22,0h6.79c.44-.06.84.25.9.69,0,.07,0,.14,0,.21v32.94Z"/>
+                    <path id="Caminho_400-2" data-name="Caminho 400-2" class="cls-4" d="M652.91,204.31c.01-.3.1-.6.26-.86l2.81-5.05c.2-.41.62-.67,1.07-.67.27.01.54.08.79.19,1.47.68,2.99,1.24,4.55,1.68,1.51.41,3.06.61,4.62.61,1.06.03,2.12-.21,3.06-.7.75-.34,1.24-1.07,1.25-1.89,0-.58-.25-1.13-.7-1.5-.6-.49-1.27-.86-2-1.12-.87-.33-2.09-.73-3.66-1.19-2.07-.58-4.08-1.36-6-2.34-1.43-.74-2.65-1.83-3.54-3.18-.87-1.47-1.29-3.15-1.22-4.86-.05-2.05.57-4.07,1.76-5.74,1.2-1.62,2.82-2.88,4.69-3.63,2.01-.83,4.17-1.25,6.35-1.23,1.47,0,2.94.17,4.37.5,1.37.3,2.71.73,4.01,1.26,1.03.42,2.02.93,2.95,1.52.41.21.68.62.71,1.07-.03.32-.13.63-.31.9l-2.83,5.14c-.17.38-.56.62-.98.62-.37-.02-.73-.13-1.05-.31-1.18-.62-2.41-1.14-3.68-1.56-1.23-.37-2.51-.55-3.8-.54-.91-.02-1.81.2-2.6.64-.64.29-1.07.92-1.1,1.62,0,.7.47,1.3,1.41,1.8,1.45.69,2.97,1.25,4.53,1.65,2.14.6,4.22,1.37,6.24,2.3,1.52.71,2.84,1.79,3.83,3.14,1.03,1.52,1.53,3.33,1.45,5.16.04,2.1-.58,4.15-1.79,5.87-1.23,1.71-2.91,3.04-4.86,3.85-2.15.91-4.46,1.36-6.79,1.33-2.35,0-4.68-.31-6.95-.9-2.2-.56-4.31-1.43-6.26-2.6-.38-.19-.61-.58-.62-1"/>
+                    <path id="Caminho_401-2" data-name="Caminho 401-2" class="cls-4" d="M717.37,207.24c.07.44-.23.86-.68.93-.08.01-.15.01-.23,0h-6.79c-.46.06-.87-.27-.93-.73,0-.07,0-.14,0-.2v-32.94c-.06-.44.26-.85.7-.9.07,0,.15,0,.22,0h6.79c.44-.06.84.24.9.68.01.07.01.15,0,.22v32.94Z"/>
+                    <path id="Caminho_402-2" data-name="Caminho 402-2" class="cls-4" d="M778.6,173.61c.17.19.26.44.24.69v32.96c.02.26-.07.51-.25.69-.19.17-.43.25-.68.24h-6.48c-.75,0-1.45-.41-1.81-1.07l-13.38-20.36v20.5c.02.25-.07.51-.25.69-.19.17-.43.25-.68.24h-6.79c-.25.01-.49-.07-.68-.24-.18-.18-.27-.44-.25-.69v-32.95c-.02-.25.07-.51.25-.69.19-.17.43-.25.68-.24h7.03c.75.04,1.42.46,1.79,1.12l12.88,19.15v-19.34c-.02-.25.07-.5.24-.69.18-.17.42-.25.67-.24h6.79c.25-.02.5.07.69.24"/>
+                    <path id="Caminho_403-2" data-name="Caminho 403-2" class="cls-4" d="M827.49,200.03c.61-.16,1.2-.37,1.76-.66v-6.14c-.01-.34.12-.67.37-.91.24-.23.56-.36.89-.36h5.98c.32,0,.64.13.86.37.23.24.36.56.36.89v11.36c0,.26-.07.51-.19.74-.1.23-.27.42-.48.55-1.63.97-3.4,1.7-5.25,2.14-1.96.55-3.98.85-6.01.88-3.24.03-6.43-.79-9.24-2.4-2.75-1.56-5.04-3.82-6.63-6.55-1.63-2.77-2.47-5.93-2.44-9.15-.04-6.48,3.42-12.47,9.05-15.67,2.81-1.61,6-2.44,9.24-2.41,1.91.02,3.81.34,5.62.94,1.76.51,3.41,1.35,4.86,2.47.33.23.53.62.52,1.02,0,.24-.07.47-.22.67l-3.5,5.26c-.19.32-.53.51-.91.5-.3,0-.59-.1-.81-.31-.78-.65-1.68-1.13-2.64-1.44-.93-.33-1.92-.5-2.91-.51-1.71-.02-3.39.42-4.88,1.26-1.45.82-2.66,2-3.5,3.44-1.71,2.96-1.71,6.61,0,9.57.84,1.44,2.05,2.62,3.5,3.44,1.49.84,3.17,1.28,4.88,1.26.58-.02,1.16-.11,1.72-.27"/>
+                </g><g id="Grupo_41-2" data-name="Grupo 41-2"><g class="cls-2"><g id="Grupo_4-4" data-name="Grupo 4-4">
+                    <path id="Caminho_204-4" data-name="Caminho 204-4" class="cls-3" d="M239.71,6.67l-91.78,233.94c-1.2,3.05-4.14,5.05-7.41,5.05h-41c-3.27,0-6.21-2.01-7.41-5.05L.34,6.67C-.64,4.16.59,1.32,3.1.34,3.67.11,4.28,0,4.89,0h52.84c3.35,0,6.34,2.1,7.48,5.25l54.82,151.23,34.75-95.85c.58-1.6-.25-3.37-1.85-3.95-.34-.12-.69-.19-1.05-.18h-34.39c-2.7,0-4.88-2.19-4.88-4.88,0-.57.1-1.13.29-1.66l16.2-44.7c1.14-3.15,4.13-5.25,7.49-5.25h98.59c2.7,0,4.88,2.19,4.88,4.88,0,.61-.11,1.22-.34,1.78"/>
+                </g></g></g></g></g>
+            </svg>
+        </div>
+        <div class="header-controls">
+            <nav>
+                <a href="#summary">Sumário</a>
+                <a href="#best-practices">Valores</a>
+                <a href="#project-details">Projeto</a>
+                <a href="#budget">Orçamento</a>
+                <a href="#timeline">Timeline</a>
+            </nav>
+            <button id="darkModeToggle" title="Alternar tema">
+                <span class="sun">☀️</span>
+                <span class="moon">🌙</span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+
+        <section id="title-section">
+            <h1>RECOGNITION PROJECT </h1>
+            <p class="subtitle">CELEBRATING TALENT 2025 </p>
+        </section>
+
+        <section id="summary">
+            <h2 class="highlight-bar">Executive Summary </h2>
+
+            <h3>A. CURRENT SITUATION </h3>
+            <p>While formal recognition tools like performance bonuses are in place, our day-to-day approach to celebrating achievements remains unstructured.  Recognition is often ad-hoc and manager-dependent, lacking an accessible program for immediate feedback.  This means we miss the opportunity to consistently and equitably reward the actions that exemplify our company's best practices. </p>
+
+            <h3>B. CHALLENGES </h3>
+            <p>A more inclusive program could help us address some challenges: </p>
+            <ul>
+                <li>Missed opportunities to reinforce positive behaviors: Access to an immediate recognition system can further enhance employee motivation by reinforcing these actions in real-time. </li>
+                <li>Difficulty reinforcing the company's principles in daily operations. </li>
+                <li>Scarcity of mechanisms to celebrate individual and collective successes. </li>
+            </ul>
+
+            <h3>C. OPPORTUNITIES </h3>
+            <p>The "Recognition Project: Celebrating Talent" is a strategic opportunity to: </p>
+            <ul>
+                <li>Enhance employee motivation, belonging, and job satisfaction. </li>
+                <li>Promote and give visibility to Clever's best practices: Clever First, Be Bold, Flow with Heart, and Level Up! </li>
+                <li>Strengthen a culture of positive feedback. </li>
+                <li>Act as another valuable tool for talent attraction and retention. </li>
+            </ul>
+        </section>
+
+        <section id="best-practices">
+            <h2 class="highlight-bar">Best Practices </h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>DIMENSION </th>
+                            <th>DESCRIPTION </th>
+                            <th>RECOGNITION CRITERIA </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>CLEVER 1ST</strong> </td>
+                            <td>Collaboration over competition: demonstrates excellent teamwork by prioritizing collective success over individual gain. Breaks down barriers, promotes open communication, and contributes to Clever's mission as an united force. </td>
+                            <td><strong>Supporting the Foundation</strong><br>Honoring those who make choices that benefit the future success of Clever, whether by creating scalable solutions or promoting ethical practices. </td>
+                        </tr>
+                        <tr>
+                            <td><strong>BE BOLD</strong> </td>
+                            <td>Innovation, ideas that challenge the status quo and make a big positive impact: thinks big and acts with courage, introducing ideas that challenge the conventional and provoke significant change. Transforms creativity into impactful solutions, shaping the future of Clever. </td>
+                            <td><strong>Meeting the Challenge</strong><br>Recognizing people who maintain their composure, navigate effectively, and act under pressure and challenges. </td>
+                        </tr>
+                        <tr>
+                            <td><strong>FLOW WITH HEART</strong> </td>
+                            <td>Embodies kindness, empathy, and humility, supporting colleagues in a meaningful way. Creates a positive and inclusive environment through acts of care and understanding. </td>
+                            <td><strong>Pay it Forward with Kindness</strong><br>Recognizing individuals who invest in the growth and development of others through knowledge sharing and guidance. </td>
+                        </tr>
+                        <tr>
+                            <td><strong>LEVEL UP!</strong> </td>
+                            <td>Wows clients (internal or external) with their mindset, inspires them with their effort, and delivers on what they promise: sets a new standard of excellence through exceptional efforts and results. Goes above and beyond to surprise clients and inspire their teammates, far exceeding expectations. </td>
+                            <td><strong>Commitment to Excellence</strong><br>A value that recognizes those who ensure exceptional operational functioning, even if it is not their primary role. </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="project-details">
+            <h2 class="highlight-bar">Project </h2>
+            <div class="project-grid">
+                <div class="project-card">
+                    <h3>AD-HOC RECOGNITION </h3>
+                    <p><strong>Manager-to-employee/ Peer-to-Peer</strong> </p>
+                    <ul>
+                        <li><strong>Happiness Raffles:</strong> Allocate an annual budget of €30 per employee for a recognition system (from manager-to-employee) that distributes rewards such as free parking days, car washes, breakfasts, or ironing services. </li>
+                        <li><strong>Special Gifts:</strong> Award special prizes for outstanding achievements, such as a feature on LinkedIn, gastronomic experiences, spa days (from peer-to-peer) or even a luxury getaway for C-Level executives. </li>
+                    </ul>
+                </div>
+                <div class="project-card">
+                    <h3>REGULAR RECOGNITION </h3>
+                    <p><strong>Clever-to-employee</strong> </p>
+                    <ul>
+                        <li><strong>Executive Lunch:</strong> Organize a monthly lunch with a board member (Luís Rodrigues, Pedro Panzina, Marcos Oliveira or Alberto Simões) for a distinguished employee, ensuring a valuable experience with a preliminary briefing and dedicated support from Clever Care or People areas. </li>
+                    </ul>
+                </div>
+                <div class="project-card">
+                    <h3>ANNUAL RECOGNITION </h3>
+                    <p><strong>Clever(board)-to-employee</strong> </p>
+                    <ul>
+                        <li><strong>Cleverstar Award:</strong> Create the "Cleverstar Annual Award" to honor the employee who "has made the most significant impact in their area," awarding a prestigious prize (e.g., a watch) valued at up to €5,000 during an in-person recognition small ceremony. </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mascot-info">
+                <h4>Please meet Sir Playhill, our new mascot for recognition initiatives! </h4>
+                <p>He will be placed on the desk of a recognized employee in the morning, as a sign to everyone that an award will be presented that day. </p>
+            </div>
+        </section>
+
+        <section id="budget">
+            <h2 class="highlight-bar">Our Proposal: Budget and Funding </h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>RECOGNITION CATEGORY </th>
+                            <th>ANNUAL COST </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Ad-Hoc: Happiness Raffles </td>
+                            <td>10.740 EUR </td>
+                        </tr>
+                        <tr>
+                            <td>Ad-Hoc: Special Gifts </td>
+                            <td>5000 EUR </td>
+                        </tr>
+                        <tr>
+                            <td>Regular: Executive Lunch </td>
+                            <td>2200 EUR </td>
+                        </tr>
+                        <tr>
+                            <td>Annual: Cleverstar Award </td>
+                            <td>5000 EUR </td>
+                        </tr>
+                        <tr class="total-row">
+                            <td><strong>Estimated Total</strong> </td>
+                            <td><strong>22940 EUR</strong> </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="observations">
+                <strong>Observations:</strong> the amount presented is the maximum annual cost, assuming every employee were to be recognized at least once. 
+            </p>
+        </section>
+        
+        <section id="timeline">
+            <h2 class="highlight-bar">Our Proposal: Timeline 2025 </h2>
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <strong>September</strong>
+                    <p>Project approval and internal communication. </p>
+                    <p>Launch of the "Ad-Hoc" Recognition and first Executive Lunch. </p>
+                </div>
+                <div class="timeline-item">
+                    <strong>October</strong>
+                    <p>Definition of the selection process and nomination of candidates for the "Cleverstar" award. </p>
+                </div>
+                <div class="timeline-item">
+                    <strong>December</strong>
+                    <p>Cleverstar Award Ceremony. </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="approval-section">
+            <h2 class="highlight-bar">Required Actions </h2>
+            <p>We request approval of this business case and its proposed annual budget of <strong>22.940 EUR</strong>  to implement this multi-faceted recognition program. </p>
+            <a href="mailto:clevercare@cleveradvertising.com?subject=Approval%20for%20Recognition%20Project%202025" class="btn">Approve Project</a>
+        </section>
+
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleButton = document.getElementById('darkModeToggle');
+            const body = document.body;
+            const sunIcon = toggleButton.querySelector('.sun');
+            const moonIcon = toggleButton.querySelector('.moon');
+
+            // Função para aplicar o tema e atualizar o ícone
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    body.classList.add('dark-mode');
+                    sunIcon.style.display = 'none';
+                    moonIcon.style.display = 'block';
+                } else {
+                    body.classList.remove('dark-mode');
+                    sunIcon.style.display = 'block';
+                    moonIcon.style.display = 'none';
+                }
+            }
+
+            // Verificar preferência guardada no localStorage
+            const savedTheme = localStorage.getItem('theme');
+            
+            // Verificar preferência do sistema operativo
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (savedTheme) {
+                // Se houver tema guardado, usa esse
+                applyTheme(savedTheme);
+            } else if (prefersDark) {
+                // Senão, se o SO for dark, usa dark
+                applyTheme('dark');
+            } else {
+                // Senão, usa light (default)
+                applyTheme('light');
+            }
+
+            // Evento do clique no botão
+            toggleButton.addEventListener('click', () => {
+                let newTheme = 'light';
+                if (!body.classList.contains('dark-mode')) {
+                    newTheme = 'dark';
+                }
+                
+                // Aplicar o novo tema e guardá-lo
+                applyTheme(newTheme);
+                localStorage.setItem('theme', newTheme);
+            });
+        });
+    </script>
+
+</body>
+</html>
